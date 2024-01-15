@@ -47,10 +47,12 @@ Install the project requirements
 pip install -r requirements.txt
 ```
 
+Don't forget to set the API tokens as global variables by placing them in the .env file or passing them into the CLI using the `--credentials` argument.
+
 Now that the system has been set up, you can run the Gradio interface.
 
 ```python
-python gradio_ui.py
+python gradio_app.py
 ```
 
 Here is a short demo showing how the project works:
