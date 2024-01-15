@@ -3,6 +3,8 @@
 import json
 import os
 import yaml
+import argparse
+import getpass
 
 from llama_index.node_parser import SimpleNodeParser
 from llama_index.llms import OpenAI
@@ -20,8 +22,21 @@ from global_variable import (
     VECTOR_STORE_PATH_DESCRIPTION,
 )
 
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
-os.environ["ACTIVELOOP_TOKEN"] = os.getenv("ACTIVELOOP_TOKEN")
+parser = argparse.ArgumentParser()
+parser.add_argument("--credentials", action="store_true")
+args = parser.parse_args()
+
+if args.credentials:
+    os.environ["ACTIVELOOP_TOKEN"] = input("Copy and paste your ActiveLoop token: ")
+    os.environ["OPENAI_API_KEY"] = input("Copy and paste your OpenAI API key: ")
+
+else:
+    os.environ["ACTIVELOOP_TOKEN"] = os.getenv("ACTIVELOOP_TOKEN")
+    os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
+
+os.environ["no_proxy"] = "localhost,127.0.0.1,::1"
+
+print("credentials entered")
 
 
 def create_storage_and_service_contexts(
