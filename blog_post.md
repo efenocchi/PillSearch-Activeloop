@@ -4,6 +4,59 @@ This project exploits the most advanced artificial intelligence techniques, spec
 
 The goal is to upload a photo of a pill and recognize it. To obtain noteworthy results it was decided to divide the problem into different phases which will be explained in the following paragraphs.
 
+To run the project you need to follow the steps in the [github repository](https://github.com/efenocchi/PillSearch-Activeloop):
+
+Create a new virtual environment
+
+```python
+python -m venv venv
+```
+
+Activate the virtual environment
+
+```python
+source venv/bin/activate
+```
+
+Clone the project repository
+
+```python
+git clone https://github.com/efenocchi/PillSearch-Activeloop.git
+```
+
+Clone the FastSAM repository and install its requirements
+
+```python
+git clone https://github.com/CASIA-IVA-Lab/FastSAM.git
+pip install -r FastSAM/requirements.txt
+```
+
+Download FastSAM weights
+
+```python
+wget -P FastSAM/weights https://huggingface.co/spaces/An-619/FastSAM/resolve/main/weights/FastSAM.pt
+```
+
+Install CLIP
+
+```python
+pip install git+https://github.com/openai/CLIP.git
+```
+
+Install the project requirements
+
+```python
+pip install -r requirements.txt
+```
+
+Don't forget to set the API tokens as global variables by placing them in the .env file or passing them into the CLI using the `--credentials` argument.
+
+Now that the system has been set up, you can run the Gradio interface.
+
+```python
+python gradio_app.py
+```
+
 ## Segmentation
 
 Initially the image is segmented so that the background does not generate false positives or false negatives, for this phase an algorithm called FastSAM was used. This algorithm is able to perform well on both GPU and CPU and has some characteristics to consider:
@@ -36,7 +89,7 @@ ResNet-18 is a compelling choice for computing visual similarity between images,
 
 The similarity between these vectors can then be computed using metrics like cosine similarity or Euclidean distance. The closer these vectors are in the feature space, the more similar the images are.
 
-This similarity is performed directly in Activeloop's Deep Lake Vector Stores, simply take the input image and pass it to Activeloop and it will return the `n` most similar images that were found.  If you want to delve deeper into this topic you can find a guide on `Activeloop` at the [following link](https://docs.activeloop.ai/example-code/getting-started/vector-store/step-4-customizing-vector-stores).
+This similarity is performed directly in Activeloop's Deep Lake Vector Stores, simply take the input image and pass it to Activeloop and it will return the `n` most similar images that were found.  If you want to delve deeper into this topic you can find a guide on `Activeloop` [here](https://docs.activeloop.ai/example-code/getting-started/vector-store/step-4-customizing-vector-stores).
 
 Going into a little more detail in this project we can see how visual similarity search is not the only one that has been used. Once the `n` most similar images have been returned they are split into two groups: 
 - the `3` most similar images 
@@ -105,7 +158,8 @@ Since we have a description for each pill we used these descriptions as if they 
 After initially loading our data onto Activeloop's Deep Lake we can show how the data present in this space is used to do an Advanced Retrieval.
 
 ```python
-import DeepLakeVectorStore
+from llama_index.vector_stores import DeepLakeVectorStore
+from typing import Optional, Union
 def create_upload_vectore_store(
     chunked_text: list,
     vector_store_path: Union[str, os.PathLike],
