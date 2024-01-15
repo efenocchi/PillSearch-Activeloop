@@ -69,8 +69,8 @@ def search_from_image(input_image):
     )
 
     # check if the code of the input image is found in the retrieved similar images
-    for el in similar_images_after_segmentation:
-        if el["metadata"]["pill_text"] == pill_text_extracted:
+    for el in similar_images_after_segmentation["metadata"]:
+        if el["pill_text"] == pill_text_extracted:
             similar_images_after_segmentation.pop(
                 similar_images_after_segmentation.index(el)
             )
@@ -362,4 +362,4 @@ with gr.Blocks(title="Pill Search") as demo:
         ],
     )
 
-demo.launch()
+demo.launch(share=True)
