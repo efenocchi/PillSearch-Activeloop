@@ -35,7 +35,7 @@ Download FastSAM weights
 wget -P FastSAM/weights https://huggingface.co/spaces/An-619/FastSAM/resolve/main/weights/FastSAM.pt
 ```
 
-Install clip
+Install CLIP
 
 ```python
 pip install git+https://github.com/openai/CLIP.git
