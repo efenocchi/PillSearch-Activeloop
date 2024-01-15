@@ -16,6 +16,12 @@ Activate the virtual environment
 source venv/bin/activate
 ```
 
+Clone this repository
+
+```python
+git clone https://github.com/efenocchi/PillSearch-Activeloop.git
+```
+
 Clone the FastSAM repository and install its requirements
 
 ```python
