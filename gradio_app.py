@@ -22,6 +22,33 @@ VESTOR_STORE_IMAGES_NORMAL = None
 VECTOR_STORE_DESCRIPTION = None
 
 
+def search_text_image_and_order_elements(
+    similar_images_after_segmentation: dict, pill_text_extracted: str
+) -> dict:
+    """
+    checks if the code extracted from the input image is found in the similar images retrieved, if it is true move that image to the first position
+    """
+    for idx, el in enumerate(similar_images_after_segmentation["metadata"]):
+        if el["pill_text"] == pill_text_extracted:
+            similar_images_after_segmentation["metadata"].pop(idx)
+
+            similar_images_after_segmentation["metadata"].insert(0, el)
+
+            filename = similar_images_after_segmentation["filename"][idx]
+            similar_images_after_segmentation["filename"].pop(idx)
+            similar_images_after_segmentation["filename"].insert(0, filename)
+
+            image = similar_images_after_segmentation["image"][idx]
+            similar_images_after_segmentation["image"].pop(idx)
+            similar_images_after_segmentation["image"].insert(0, image)
+
+            el_id = similar_images_after_segmentation["id"][idx]
+            similar_images_after_segmentation["id"].pop(idx)
+            similar_images_after_segmentation["id"].insert(0, el_id)
+            break
+    return similar_images_after_segmentation
+
+
 def search_from_image(input_image):
     print("----------- starting search from image -----------")
     iframe_html = '<iframe src={url} width="570px" height="400px"/iframe>'
@@ -68,18 +95,18 @@ def search_from_image(input_image):
         VESTOR_STORE_IMAGES_MASKED, image_path_masked
     )
 
-    # check if the code of the input image is found in the retrieved similar images
-    for el in similar_images_after_segmentation["metadata"]:
-        if el["pill_text"] == pill_text_extracted:
-            similar_images_after_segmentation.pop(
-                similar_images_after_segmentation.index(el)
-            )
-            similar_images_after_segmentation.insert(0, el)
+    similar_images_after_segmentation = search_text_image_and_order_elements(
+        similar_images_after_segmentation, pill_text_extracted
+    )
 
+    # take the 10 most similar images filenames
     filename_similar_images_to_retrieve_from_description_db = []
     for el in similar_images_after_segmentation["filename"]:
         filename_similar_images_to_retrieve_from_description_db.append(el)
-        break
+
+    # filename_similar_images_to_retrieve_from_description_db = [
+    #     similar_images_after_segmentation["filename"][0]
+    # ]
 
     (
         _,
@@ -97,7 +124,7 @@ def search_from_image(input_image):
         similar_images_after_segmentation["filename"][2],
     ]
     most_similar_3_node_ids = [
-        filtered_elements["filename"].index(filename)
+        similar_images_after_segmentation["filename"].index(filename)
         for filename in most_similar_3_images_filenames
     ]
     nodes = [el for idx, el in enumerate(nodes) if idx not in most_similar_3_node_ids]
