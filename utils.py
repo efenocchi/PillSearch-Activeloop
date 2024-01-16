@@ -127,7 +127,7 @@ def get_index_and_nodes_from_activeloop(vector_store_path: str):
 
 def get_index_and_nodes_after_visual_similarity(filenames: list):
     """
-    Takes the id of the similar images and after having the id of the similar images, it returns the index and nodes (based on description similarity)
+    Takes the filenames of the similar images and after having the id of the similar images return the index and nodes (based on description similarity)
     """
     vector_store = load_vector_store(vector_store_path=VECTOR_STORE_PATH_DESCRIPTION)
 
