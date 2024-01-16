@@ -20,6 +20,7 @@ Clone this repository
 
 ```python
 git clone https://github.com/efenocchi/PillSearch-Activeloop.git
+cd PillSearch-Activeloop
 ```
 
 Clone the FastSAM repository and install its requirements
