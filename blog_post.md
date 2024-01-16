@@ -4,7 +4,7 @@ This project exploits the most advanced artificial intelligence techniques, spec
 
 The goal is to upload a photo of a pill and recognize it. To obtain noteworthy results it was decided to divide the problem into different phases which will be explained in the following paragraphs.
 
-To run the project you need to follow the steps in the [github repository](https://github.com/efenocchi/PillSearch-Activeloop):
+To execute the project you need to run the following steps taken from the [github repository](https://github.com/efenocchi/PillSearch-Activeloop):
 
 Create a new virtual environment
 
@@ -22,6 +22,7 @@ Clone the project repository
 
 ```python
 git clone https://github.com/efenocchi/PillSearch-Activeloop.git
+cd PillSearch-Activeloop
 ```
 
 Clone the FastSAM repository and install its requirements
