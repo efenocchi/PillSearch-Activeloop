@@ -50,9 +50,17 @@ pip install -r requirements.txt
 
 Don't forget to set the API tokens as global variables by placing them in the .env file or passing them into the CLI using the `--credentials` argument.
 
+
+If you are using Colab add this code:
+
+```
+with open('/etc/resolv.conf', 'w') as file:
+    file.write("nameserver 8.8.8.8")
+```
+
 Now that the system has been set up, you can run the Gradio interface.
 
-```python
+```
 python gradio_app.py
 ```
 
