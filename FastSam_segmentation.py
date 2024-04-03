@@ -29,7 +29,10 @@ class FastSAM_segmentation:
     """
 
     def __init__(self, device: Union[str, int] = "cpu"):
-        self.model = FastSAM("./FastSAM/weights/FastSAM.pt")
+        import os
+
+        local_path = os.path.dirname(os.path.realpath(__file__))
+        self.model = FastSAM(local_path + "/FastSAM/weights/FastSAM.pt")
         self.device = device
 
     def process(self, image_path: str, output_name: str, test=False) -> Image:

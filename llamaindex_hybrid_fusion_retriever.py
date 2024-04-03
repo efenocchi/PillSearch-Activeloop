@@ -1,9 +1,9 @@
 # pylint: disable=locally-disabled, multiple-statements, fixme, line-too-long, missing-module-docstring, missing-function-docstring, W0621:redefined-outer-name,missing-class-docstring
 
 import os
-from llama_index.retrievers import QueryFusionRetriever
-from llama_index.retrievers import BM25Retriever
-from llama_index.query_engine import RetrieverQueryEngine
+from llama_index.core.retrievers import QueryFusionRetriever
+from llama_index.retrievers.bm25 import BM25Retriever
+from llama_index.core.query_engine import RetrieverQueryEngine
 import openai
 from global_variable import QUERY, VECTOR_STORE_PATH_BASELINE, VECTOR_STORE_PATH_HYBRID
 
@@ -59,7 +59,9 @@ class HybridFusionRetriever:
 if __name__ == "__main__":
     pills_info = get_pills_info()
 
-    vector_store = load_vector_store(VECTOR_STORE_PATH_HYBRID)
+    vector_store = load_vector_store(
+        VECTOR_STORE_PATH_HYBRID, token=os.environ["ACTIVELOOP_TOKEN"]
+    )
 
     # IN CASE YOU WANT TO CREATE A NEW VECTOR STORE AND POPULATE IT WITH THE DOCUMENTS
     # (

@@ -1,16 +1,16 @@
 # pylint: disable=locally-disabled, multiple-statements, fixme, line-too-long, missing-module-docstring, missing-function-docstring, W0621:redefined-outer-name,missing-class-docstring
 import os
 import openai
-from llama_index import (
+from llama_index.core import (
     QueryBundle,
 )
-from llama_index.retrievers import BM25Retriever
+from llama_index.retrievers.bm25 import BM25Retriever
 
 
-from llama_index.retrievers import BaseRetriever
-from llama_index.postprocessor import SentenceTransformerRerank
+from llama_index.core.retrievers import BaseRetriever
+from llama_index.core.postprocessor import SentenceTransformerRerank
 from llamaindex_bm25_baseline import ClassicRetrieverBM25
-from llama_index.query_engine import RetrieverQueryEngine
+from llama_index.core.query_engine import RetrieverQueryEngine
 from global_variable import (
     QUERY,
     VECTOR_STORE_PATH_COMPLETE_SEQUENTIALLY,
@@ -121,7 +121,9 @@ class BM25CompleteSequentially:
 if __name__ == "__main__":
     pills_info = get_pills_info()
 
-    vector_store = load_vector_store(VECTOR_STORE_PATH_COMPLETE_SEQUENTIALLY)
+    vector_store = load_vector_store(
+        VECTOR_STORE_PATH_COMPLETE_SEQUENTIALLY, token=os.environ["ACTIVELOOP_TOKEN"]
+    )
 
     # IN CASE YOU WANT TO CREATE A NEW VECTOR STORE AND POPULATE IT WITH THE DOCUMENTS
     # (

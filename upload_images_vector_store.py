@@ -4,8 +4,7 @@ import torch
 from torchvision import transforms, models
 from torchvision.models.feature_extraction import create_feature_extractor
 from PIL import Image
-from llama_index.vector_stores import DeepLakeVectorStore
-
+from llama_index.vector_stores.deeplake import DeepLakeVectorStore
 from utils import get_pills_info
 from global_variable import VECTOR_STORE_PATH_IMAGES_MASKED
 
@@ -65,7 +64,8 @@ def upload_vector_store(vector_store_path: str, data_folder: str, pills_info: di
             {"name": "metadata", "htype": "json"},
         ],
     )
-    vector_store = vector_store.vectorstore
+    # vector_store = vector_store.vectorstore
+    vector_store = vector_store
     # image_path = el
     image_path = [
         os.path.join(
@@ -89,7 +89,7 @@ def upload_vector_store(vector_store_path: str, data_folder: str, pills_info: di
 
 
 def image_similarity_activeloop(vector_store: DeepLakeVectorStore, image_path: str):
-    result = vector_store.search(
+    result = vector_store._vectorstore.search(
         embedding_data=[image_path],
         embedding_function=embedding_function_images,
         k=10,
@@ -110,7 +110,8 @@ if __name__ == "__main__":
     vector_store = DeepLakeVectorStore(
         path=VECTOR_STORE_PATH_IMAGES_MASKED,
     )
-    vector_store = vector_store.vectorstore
+    # vector_store = vector_store.vectorstore
+    vector_store = vector_store
     image_path = "output/aleve_masked.png"
     image_path = "images/aleve.jpg"
 

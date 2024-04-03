@@ -159,7 +159,7 @@ Since we have a description for each pill we used these descriptions as if they 
 After initially loading our data onto Activeloop's Deep Lake we can show how the data present in this space is used to do an Advanced Retrieval.
 
 ```python
-from llama_index.vector_stores import DeepLakeVectorStore
+from llama_index.vector_stores.deeplake import DeepLakeVectorStore
 from typing import Optional, Union
 def create_upload_vectore_store(
     chunked_text: list,
@@ -178,7 +178,8 @@ def create_upload_vectore_store(
             {"name": "metadata", "htype": "json"},
         ],
     )
-    vector_store = vector_store.vectorstore
+    # vector_store = vector_store.vectorstore
+    vector_store = vector_store
     vector_store.add(
         text=chunked_text,
         embedding_function=embedding_function_text,
@@ -238,13 +239,13 @@ def get_index_and_nodes_after_visual_similarity(filenames: list):
     conditions = " or ".join(f"filename == '{name}'" for name in filenames)
     tql_query = f"select * where {conditions}"
 
-    filtered_elements = vector_store.vectorstore.search(query=tql_query)
+    # filtered_elements = vector_store.vectorstore.search(query=tql_query)
+    filtered_elements = vector_store._vectorstore.search(query=tql_query)
     chunks = []
     for el in filtered_elements["text"]:
         chunks.append(el)
 
-    string_iterable_reader = download_loader("StringIterableReader")
-    loader = string_iterable_reader()
+    loader = StringIterableReader()
     documents = loader.load_data(texts=chunks)
     node_parser = SimpleNodeParser.from_defaults(separator="\n")
     nodes = node_parser.get_nodes_from_documents(documents)
