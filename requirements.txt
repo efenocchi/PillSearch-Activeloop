@@ -1,5 +1,7 @@
-deeplake @ git+https://github.com/activeloopai/deeplake.git@fdc0b0baeffcd27e6943aa77915024ceefebf65b
+deeplake==3.9.15
 llama-index==0.9.19
 python-dotenv==1.0.0
 gradio==4.11.0
 rank-bm25==0.2.2
+numpy
+ultralytics==8.0.120
