@@ -13,8 +13,8 @@ from llama_index import (
     ServiceContext,
     download_loader,
 )
-from llama_index import VectorStoreIndex
-from llama_index.vector_stores import DeepLakeVectorStore
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Document
+from llama_index.vector_stores.deeplake import DeepLakeVectorStore
 
 from global_variable import (
     PILLS_JSON_FILE_CLEANED,
@@ -27,10 +27,17 @@ parser.add_argument("--credentials", action="store_true")
 args = parser.parse_args()
 
 if args.credentials:
-    os.environ["ACTIVELOOP_TOKEN"] = input("Copy and paste your ActiveLoop token: ")
-    os.environ["OPENAI_API_KEY"] = input("Copy and paste your OpenAI API key: ")
+    os.environ["ACTIVELOOP_TOKEN"] = getpass.getpass(
+        "Copy and paste your ActiveLoop token: "
+    )
+    os.environ["OPENAI_API_KEY"] = getpass.getpass(
+        "Copy and paste your OpenAI API key: "
+    )
 
 else:
+    from dotenv import load_dotenv
+
+    load_dotenv()  # take environment variables from .env.
     os.environ["ACTIVELOOP_TOKEN"] = os.getenv("ACTIVELOOP_TOKEN")
     os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 

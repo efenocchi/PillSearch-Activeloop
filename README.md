@@ -50,6 +50,18 @@ pip install -r requirements.txt
 
 Don't forget to set the API tokens as global variables by placing them in the .env file or passing them into the CLI using the `--credentials` argument.
 
+If you are using a notebook, to avoid errors, uninstall the following package
+
+```python
+!pip uninstall uvloop
+```
+
+add clip package import inside FastSAM (`PillSearch-Activeloop/FastSAM/fastsam/prompt.py`)
+
+```python
+import clip
+```
+
 Now that the system has been set up, you can run the Gradio interface.
 
 ```python
