@@ -62,9 +62,17 @@ add clip package import inside FastSAM (`PillSearch-Activeloop/FastSAM/fastsam/p
 import clip
 ```
 
+
+If you are using Colab add this code:
+
+```
+with open('/etc/resolv.conf', 'w') as file:
+    file.write("nameserver 8.8.8.8")
+```
+
 Now that the system has been set up, you can run the Gradio interface.
 
-```python
+```
 python gradio_app.py
 ```
 

@@ -6,12 +6,15 @@ import yaml
 import argparse
 import getpass
 
-from llama_index.node_parser import SimpleNodeParser
-from llama_index.llms import OpenAI
-from llama_index import (
+from llama_index.core.node_parser import SentenceSplitter
+
+# from llama_index.node_parser import SimpleNodeParser
+from llama_index.llms.openai import OpenAI
+
+# from llama_index.llms import OpenAI
+from llama_index.core import (
     StorageContext,
     ServiceContext,
-    download_loader,
 )
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Document
 from llama_index.vector_stores.deeplake import DeepLakeVectorStore
@@ -38,6 +41,9 @@ else:
     from dotenv import load_dotenv
 
     load_dotenv()  # take environment variables from .env.
+    from dotenv import load_dotenv
+
+    load_dotenv()  # take environment variables from .env.
     os.environ["ACTIVELOOP_TOKEN"] = os.getenv("ACTIVELOOP_TOKEN")
     os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
@@ -49,13 +55,14 @@ print("credentials entered")
 def create_storage_and_service_contexts(
     vector_store_path: str,
 ):
-    vector_store = load_vector_store(vector_store_path, overwrite=True)
-    string_iterable_reader = download_loader("StringIterableReader")
-    loader = string_iterable_reader()
+    vector_store = load_vector_store(
+        vector_store_path, overwrite=True, token=os.environ["ACTIVELOOP_TOKEN"]
+    )
+    loader = StringIterableReader()
     chunks = create_chunks(get_pills_info())
     documents = loader.load_data(texts=chunks)
 
-    node_parser = SimpleNodeParser.from_defaults(separator="\n")
+    node_parser = SentenceSplitter.from_defaults(separator="\n")
     nodes = node_parser.get_nodes_from_documents(documents)
 
     print(f"Number of nodes: {len(nodes)}")
@@ -86,12 +93,19 @@ def create_chunks(pills_info: dict):
     return chunks
 
 
-def load_vector_store(vector_store_path: str, overwrite: bool = False):
+def load_vector_store(
+    vector_store_path: str,
+    overwrite: bool = False,
+    token: str = None,
+    runtime: dict = {"tensor_db": True},
+):
+
     vector_store = DeepLakeVectorStore(
         dataset_path=vector_store_path,
         overwrite=overwrite,
-        runtime={"tensor_db": True},
+        runtime=runtime,
         read_only=True,
+        token=token,
     )
 
     return vector_store
@@ -110,15 +124,16 @@ def get_pills_info2():
 
 
 def get_index_and_nodes_from_activeloop(vector_store_path: str):
-    vector_store = load_vector_store(vector_store_path=vector_store_path)
+    vector_store = load_vector_store(
+        vector_store_path=vector_store_path, token=os.environ["ACTIVELOOP_TOKEN"]
+    )
     chunks = []
     for el in vector_store.client:
         chunks.append(str(el.text.data()["value"]))
 
-    string_iterable_reader = download_loader("StringIterableReader")
-    loader = string_iterable_reader()
+    loader = StringIterableReader()
     documents = loader.load_data(texts=chunks)
-    node_parser = SimpleNodeParser.from_defaults(separator="\n")
+    node_parser = SentenceSplitter.from_defaults(separator="\n")
     nodes = node_parser.get_nodes_from_documents(documents)
 
     # To ensure same id's per run, we manually set them.
@@ -136,20 +151,23 @@ def get_index_and_nodes_after_visual_similarity(filenames: list):
     """
     Takes the filenames of the similar images and after having the id of the similar images return the index and nodes (based on description similarity)
     """
-    vector_store = load_vector_store(vector_store_path=VECTOR_STORE_PATH_DESCRIPTION)
+    vector_store = load_vector_store(
+        vector_store_path=VECTOR_STORE_PATH_DESCRIPTION,
+        token=os.environ["ACTIVELOOP_TOKEN"],
+    )
 
     conditions = " or ".join(f"filename == '{name}'" for name in filenames)
     tql_query = f"select * where {conditions}"
 
-    filtered_elements = vector_store.vectorstore.search(query=tql_query)
+    # filtered_elements = vector_store.vectorstore.search(query=tql_query)
+    filtered_elements = vector_store._vectorstore.search(query=tql_query)
     chunks = []
     for el in filtered_elements["text"]:
         chunks.append(el)
 
-    string_iterable_reader = download_loader("StringIterableReader")
-    loader = string_iterable_reader()
+    loader = StringIterableReader()
     documents = loader.load_data(texts=chunks)
-    node_parser = SimpleNodeParser.from_defaults(separator="\n")
+    node_parser = SentenceSplitter.from_defaults(separator="\n")
     nodes = node_parser.get_nodes_from_documents(documents)
 
     # To ensure same id's per run, we manually set them.

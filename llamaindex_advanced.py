@@ -3,10 +3,9 @@ import nest_asyncio
 nest_asyncio.apply()
 
 
-from llama_index import SimpleDirectoryReader
-from llama_index.node_parser import SimpleNodeParser
-from llama_index.llama_pack import download_llama_pack
-from llama_index import download_loader
+from llama_index.core import SimpleDirectoryReader
+from llama_index.core.node_parser import SimpleNodeParser
+from llama_index.core.llama_pack import download_llama_pack
 
 
 # load in some sample data

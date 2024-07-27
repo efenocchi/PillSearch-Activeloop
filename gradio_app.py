@@ -14,7 +14,7 @@ from global_variable import (
 )
 from PIL import Image
 import cv2
-from llama_index.retrievers import BM25Retriever
+from llama_index.retrievers.bm25 import BM25Retriever
 import urllib.parse
 
 VESTOR_STORE_IMAGES_MASKED = None
@@ -60,14 +60,18 @@ def search_from_image(input_image):
     global VECTOR_STORE_DESCRIPTION
     desc = "Description pill "
     sd_eff = "Side-effects for the pill "
+
     if not VESTOR_STORE_IMAGES_MASKED:
         VESTOR_STORE_IMAGES_MASKED = load_vector_store(
-            VECTOR_STORE_PATH_IMAGES_MASKED
-        ).vectorstore
+            VECTOR_STORE_PATH_IMAGES_MASKED, token=os.environ["ACTIVELOOP_TOKEN"]
+        )
     if not VECTOR_STORE_DESCRIPTION:
         VECTOR_STORE_DESCRIPTION = load_vector_store(
-            VECTOR_STORE_PATH_DESCRIPTION
-        ).vectorstore
+            VECTOR_STORE_PATH_DESCRIPTION,
+            token=os.environ["ACTIVELOOP_TOKEN"],
+            runtime={"tensor_db": False},
+        )
+
     # USED FOR NORMAL IMAGES RESEARCH
     # if not VESTOR_STORE_IMAGES_NORMAL:
     #     VESTOR_STORE_IMAGES_NORMAL = load_vector_store(
