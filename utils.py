@@ -7,6 +7,7 @@ import argparse
 import getpass
 
 from llama_index.core.node_parser import SentenceSplitter
+from llama_index.readers.string_iterable import StringIterableReader
 
 # from llama_index.node_parser import SimpleNodeParser
 from llama_index.llms.openai import OpenAI
