@@ -133,7 +133,7 @@ def search_from_image(input_image):
     ]
     nodes = [el for idx, el in enumerate(nodes) if idx not in most_similar_3_node_ids]
     # DESCRIPTION SIMILARITY
-    bm25_retriever = BM25Retriever.from_defaults(nodes=nodes, similarity_top_k=10)
+    bm25_retriever = BM25Retriever.from_defaults(nodes=nodes, similarity_top_k=7)
     hybrid_only_bm25_retriever = ClassicRetrieverBM25(bm25_retriever)
     # most similar image (visually)
     id_most_similar = filtered_elements["filename"].index(
